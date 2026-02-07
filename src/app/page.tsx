@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/lib/auth/auth-context'
@@ -10,7 +10,8 @@ export default function HomePage() {
   const { user, isAdmin, signInWithGoogle, signOut } = useAuth()
   const [categories, setCategories] = useState<(Category & { product_count: number })[]>([])
   const [totalProducts, setTotalProducts] = useState(0)
-  const supabase = createClient()
+  const supabaseRef = useRef(createClient())
+  const supabase = supabaseRef.current
 
   useEffect(() => {
     fetchData()

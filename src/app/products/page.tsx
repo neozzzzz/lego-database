@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/lib/auth/auth-context'
@@ -8,12 +8,13 @@ import type { Product, Category } from '@/lib/types'
 
 export default function ProductsListPage() {
   const { user, isAdmin, signInWithGoogle, signOut } = useAuth()
+  const supabaseRef = useRef(createClient())
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [filterCat, setFilterCat] = useState('')
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('name_ko')
-  const supabase = createClient()
+  const supabase = supabaseRef.current
 
   useEffect(() => {
     supabase.from('categories').select('*').eq('is_active', true).order('sort_order').then(({ data }) => setCategories(data || []))

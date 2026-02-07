@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -29,7 +29,8 @@ export default function ProductDetailPage() {
   const [liked, setLiked] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const { user, isAdmin, signInWithGoogle, signOut } = useAuth()
-  const supabase = createClient()
+  const supabaseRef = useRef(createClient())
+  const supabase = supabaseRef.current
 
   useEffect(() => {
     fetchProduct()
