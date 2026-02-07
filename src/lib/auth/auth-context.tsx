@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
 
@@ -34,35 +34,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
+  const supabaseRef = useRef(createClient())
+  const supabase = supabaseRef.current
 
   async function fetchProfile(userId: string) {
-    const { data } = await supabase
-      .from('users')
-      .select('role, nickname')
-      .eq('id', userId)
-      .single()
-    if (data) {
-      setProfile({ nickname: data.nickname, role: data.role })
-      setIsAdmin(data.role === 'admin')
+    try {
+      const { data } = await supabase
+        .from('users')
+        .select('role, nickname')
+        .eq('id', userId)
+        .single()
+      if (data) {
+        setProfile({ nickname: data.nickname, role: data.role })
+        setIsAdmin(data.role === 'admin')
+      }
+    } catch (e) {
+      console.error('Profile fetch error:', e)
     }
   }
 
   useEffect(() => {
+    let mounted = true
+
     const getUser = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser()
-        setUser(user)
-        if (user) await fetchProfile(user.id)
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!mounted) return
+        const u = session?.user ?? null
+        setUser(u)
+        if (u) await fetchProfile(u.id)
       } catch (e) {
         console.error('Auth error:', e)
       } finally {
-        setLoading(false)
+        if (mounted) setLoading(false)
       }
     }
     getUser()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!mounted) return
       const u = session?.user ?? null
       setUser(u)
       if (u) {
@@ -73,7 +83,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [])
 
   const signInWithGoogle = async () => {
