@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #121212;
+  --card-hover: #1a1a1a;
+  --border: #262626;
+  --primary: #ffffff;
+  --primary-fg: #000000;
+  --secondary: #262626;
+  --secondary-fg: #ffffff;
+  --accent: #333333;
+  --muted: #999999;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Threads style card */
+.card-threads {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1rem;
+  transition: background 0.2s;
+}
+.card-threads:hover {
+  background: var(--card-hover);
+}
+
+/* Buttons */
+.btn-threads {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+.btn-threads:hover { transform: scale(1.05); }
+.btn-threads:active { transform: scale(0.95); }
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-fg);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary:hover { opacity: 0.9; transform: scale(1.05); }
+.btn-primary:active { transform: scale(0.95); }
+
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--secondary-fg);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+.btn-secondary:hover { background: var(--accent); transform: scale(1.05); }
+
+.btn-danger {
+  background: #dc2626;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+.btn-danger:hover { background: #ef4444; transform: scale(1.05); }
+
+/* Input */
+.input-threads {
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--foreground);
+  transition: all 0.2s;
+  outline: none;
+}
+.input-threads:focus {
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
+}
+
+.text-muted { color: var(--muted); }
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(to right, #ffffff, #9ca3af);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animation */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 0.3s ease-out; }
+
+/* Number input spinner hide */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+select {
+  background: var(--secondary);
+  color: var(--foreground);
+}
