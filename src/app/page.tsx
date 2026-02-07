@@ -58,9 +58,14 @@ export default function HomePage() {
                 </Link>
               )}
               {user ? (
-                <Link href="/my" className="text-muted hover:text-white transition-colors text-sm">
-                  내 정보
-                </Link>
+                <>
+                  <Link href="/my" className="text-muted hover:text-white transition-colors text-sm">
+                    내 정보
+                  </Link>
+                  <button onClick={signOut} className="text-red-400 hover:text-red-300 transition-colors text-sm">
+                    로그아웃
+                  </button>
+                </>
               ) : (
                 <button
                   onClick={signInWithGoogle}

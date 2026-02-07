@@ -17,8 +17,10 @@ export default function MyPage() {
   const supabase = createClient()
 
   useEffect(() => {
-    if (!loading && !user) router.push('/')
-  }, [user, loading])
+    if (!loading && !user) {
+      router.push('/')
+    }
+  }, [user, loading, router])
 
   useEffect(() => {
     if (profile?.nickname) setNickname(profile.nickname)
@@ -55,13 +57,15 @@ export default function MyPage() {
     setLikes(prev => prev.filter(l => l.id !== productId))
   }
 
-  if (loading || !user) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-muted">로딩 중...</div>
       </div>
     )
   }
+
+  if (!user) return null
 
   return (
     <div className="min-h-screen">

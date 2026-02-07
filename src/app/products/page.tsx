@@ -48,7 +48,10 @@ export default function ProductsListPage() {
             <div className="flex items-center gap-3">
               <span className="text-xs text-muted">{filtered.length}개</span>
               {user ? (
-                <Link href="/my" className="text-muted hover:text-white transition-colors text-xs">내 정보</Link>
+                <>
+                  <Link href="/my" className="text-muted hover:text-white transition-colors text-xs">내 정보</Link>
+                  <button onClick={signOut} className="text-red-400 hover:text-red-300 text-xs">로그아웃</button>
+                </>
               ) : (
                 <button
                   onClick={signInWithGoogle}

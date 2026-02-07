@@ -39,37 +39,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function fetchProfile(userId: string) {
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('users')
         .select('role, nickname')
         .eq('id', userId)
-        .single()
+        .maybeSingle()
       if (data) {
         setProfile({ nickname: data.nickname, role: data.role })
         setIsAdmin(data.role === 'admin')
+      } else {
+        setProfile({ nickname: null, role: 'user' })
+        setIsAdmin(false)
       }
-    } catch (e) {
-      console.error('Profile fetch error:', e)
+    } catch {
+      setProfile({ nickname: null, role: 'user' })
+      setIsAdmin(false)
     }
   }
 
   useEffect(() => {
     let mounted = true
 
-    const getUser = async () => {
+    const init = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
         if (!mounted) return
         const u = session?.user ?? null
         setUser(u)
         if (u) await fetchProfile(u.id)
-      } catch (e) {
-        console.error('Auth error:', e)
-      } finally {
-        if (mounted) setLoading(false)
+      } catch {
+        // ignore
       }
+      if (mounted) setLoading(false)
     }
-    getUser()
+    init()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (!mounted) return
@@ -81,6 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setProfile(null)
         setIsAdmin(false)
       }
+      setLoading(false)
     })
 
     return () => {
