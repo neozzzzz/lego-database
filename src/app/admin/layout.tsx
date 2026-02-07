@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, [isAdmin, loading, pathname])
 
-  if (pathname === '/admin/login') return <>{children}</>
+  if (pathname?.includes('/login')) return <>{children}</>
 
   if (loading) {
     return (
